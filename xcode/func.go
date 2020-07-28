@@ -6,10 +6,9 @@ import (
 
 func New(code int) XCode {
 	// 如果是已定义的 code，直接返回；否则构建一个
-	for _, c := range allCode {
-		if c.code == code {
-			return c
-		}
+	repo := Repository()
+	if rc, ok := repo.codes.Load(code); ok {
+		return rc.(XCode)
 	}
 
 	return NewWithMessage(code, InternalServerError.message)

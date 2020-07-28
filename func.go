@@ -47,6 +47,14 @@ func WithXCodeMessagef(code xcode.XCode, format string, args ...interface{}) XEr
 	return WithXCodeMessage(code, fmt.Sprintf(format, args...))
 }
 
+func LoadCodes(codes ...xcode.XCode) {
+	xcode.Repository().LoadCodes(codes...)
+}
+
+func AppendCodes(codes ...xcode.XCode) {
+	xcode.Repository().AppendCodes(codes...)
+}
+
 func IsXCode(err error, code xcode.XCode) bool {
 	return IsErrorCode(err, code.Code())
 }
