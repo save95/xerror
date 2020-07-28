@@ -32,7 +32,7 @@ var (
 	GRPCTimeout        = &xCode{httpStatus: http.StatusInternalServerError, code: 2006, message: "GRPC 处理超时"}
 )
 
-var allCode = []*xCode{
+var allCode = []XCode{
 	ErrorCodeFailed,
 
 	Unauthorized,
