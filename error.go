@@ -8,6 +8,7 @@ import (
 type Error struct {
 	code   xcode.XCode
 	error  error
+	fields []interface{}
 }
 
 func (e *Error) String() string {
@@ -74,4 +75,18 @@ func (e *Error) ToMessage(config *ecode.Config) string {
 	}
 
 	return msg
+}
+
+func (e *Error) WithFields(field ...interface{}) {
+	if e.fields == nil {
+		e.fields = make([]interface{}, 0)
+	}
+	e.fields = append(e.fields, field...)
+}
+
+func (e *Error) GetFields() []interface{} {
+	if e.fields == nil {
+		return make([]interface{}, 0)
+	}
+	return e.fields
 }
