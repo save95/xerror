@@ -6,14 +6,17 @@ import (
 )
 
 func Wrap(err error, message string) XError {
+	code := xcode.NewMessage(message)
+
 	// 如果本身是 XError 则包装 error
 	// 偷个懒，直接用 pkg/errors 来包装
 	if xe, ok := err.(XError); ok {
 		err = xe.Unwrap()
+		code = xcode.NewWithMessage(xe.ErrorCode(), xe.Error())
 	}
 
 	return &Error{
-		code:  xcode.NewMessage(message),
+		code:  code,
 		error: errors.Wrap(err, message),
 	}
 }
