@@ -12,12 +12,18 @@ const (
 var (
 	ErrorCodeFailed = &xCode{httpStatus: http.StatusInternalServerError, code: 100, message: "错误码定义错误"}
 
-	InternalServerError = &xCode{httpStatus: http.StatusInternalServerError, code: 500, message: "内部服务错误"}
 	RequestParamError   = &xCode{httpStatus: http.StatusBadRequest, code: 400, message: "请求参数错误"}
 	Unauthorized        = &xCode{httpStatus: http.StatusUnauthorized, code: 401, message: "请求未授权"}
+	Forbidden           = &xCode{httpStatus: http.StatusForbidden, code: 403, message: "无权访问"}
+	ResourceNotFound    = &xCode{httpStatus: http.StatusNotFound, code: 404, message: "请求资源不存在"}
+	MethodNotAllowed    = &xCode{httpStatus: http.StatusMethodNotAllowed, code: 405, message: "请求方法不支持"}
+	NotAcceptable       = &xCode{httpStatus: http.StatusNotAcceptable, code: 406, message: "不接受的请求"}
 	RequestTimeout      = &xCode{httpStatus: http.StatusRequestTimeout, code: 408, message: "请求超时"}
+	InternalServerError = &xCode{httpStatus: http.StatusInternalServerError, code: 500, message: "内部服务错误"}
+	NotImplemented      = &xCode{httpStatus: http.StatusNotImplemented, code: 501, message: "请求方法未实现"}
 	BadGateway          = &xCode{httpStatus: http.StatusBadGateway, code: 502, message: "网关异常"}
 	GatewayTimeout      = &xCode{httpStatus: http.StatusGatewayTimeout, code: 504, message: "网关超时"}
+	VersionNotSupported = &xCode{httpStatus: http.StatusHTTPVersionNotSupported, code: 505, message: "不支持的版本"}
 
 	// DB 错误，前缀 1
 	DBFailed            = &xCode{httpStatus: http.StatusInternalServerError, code: 1001, message: "数据库操作失败"}
@@ -39,11 +45,17 @@ var allCode = []XCode{
 	ErrorCodeFailed,
 
 	Unauthorized,
+	Forbidden,
+	ResourceNotFound,
+	MethodNotAllowed,
+	NotAcceptable,
 	RequestParamError,
 	InternalServerError,
+	NotImplemented,
 	RequestTimeout,
 	BadGateway,
 	GatewayTimeout,
+	VersionNotSupported,
 
 	DBFailed,
 	DBTransactionError,
