@@ -15,6 +15,9 @@ var (
 	InternalServerError = &xCode{httpStatus: http.StatusInternalServerError, code: 500, message: "内部服务错误"}
 	RequestParamError   = &xCode{httpStatus: http.StatusBadRequest, code: 400, message: "请求参数错误"}
 	Unauthorized        = &xCode{httpStatus: http.StatusUnauthorized, code: 401, message: "请求未授权"}
+	RequestTimeout      = &xCode{httpStatus: http.StatusRequestTimeout, code: 408, message: "请求超时"}
+	BadGateway          = &xCode{httpStatus: http.StatusBadGateway, code: 502, message: "网关异常"}
+	GatewayTimeout      = &xCode{httpStatus: http.StatusGatewayTimeout, code: 504, message: "网关超时"}
 
 	// DB 错误，前缀 1
 	DBFailed            = &xCode{httpStatus: http.StatusInternalServerError, code: 1001, message: "数据库操作失败"}
@@ -38,6 +41,9 @@ var allCode = []XCode{
 	Unauthorized,
 	RequestParamError,
 	InternalServerError,
+	RequestTimeout,
+	BadGateway,
+	GatewayTimeout,
 
 	DBFailed,
 	DBTransactionError,
