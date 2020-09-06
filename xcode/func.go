@@ -22,7 +22,7 @@ func NewWithMessage(code int, message string) XCode {
 	// 如果是已定义的 code，直接返回；否则构建一个
 	repo := Repository()
 	if rc, ok := repo.codes.Load(code); ok {
-		return rc.(XCode)
+		return WithMessage(rc.(XCode), message)
 	}
 
 	// 非已定义的，需要检查错误码
@@ -38,9 +38,14 @@ func NewWithMessage(code int, message string) XCode {
 }
 
 func WithMessage(xcode XCode, message string) XCode {
+	msg := xcode.String()
+	if len(message) > 0 {
+		msg = message
+	}
+
 	return &xCode{
 		httpStatus: xcode.HttpStatus(),
 		code:       xcode.Code(),
-		message:    message,
+		message:    msg,
 	}
 }
