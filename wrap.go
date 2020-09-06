@@ -22,7 +22,7 @@ func Wrap(err error, message string) XError {
 
 	return &Error{
 		code:  code,
-		error: err,
+		error: errors.Wrap(err, message),
 	}
 }
 
@@ -43,7 +43,7 @@ func WrapWithXCode(err error, code xcode.XCode) XError {
 	if nil == err {
 		err = errors.New(code.String())
 	} else {
-		err = errors.WithMessage(err, code.String())
+		err = errors.Wrap(err, code.String())
 	}
 
 	return &Error{
