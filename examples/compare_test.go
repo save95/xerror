@@ -9,7 +9,8 @@ import (
 
 func ExampleIsXCode() {
 	err := xerror.New("server error")
-	fmt.Println(xerror.IsXCode(err, xcode.InternalServerError))
+	success := xcode.InternalServerError
+	fmt.Println(xerror.IsXCode(err, success))
 
 	failed := xcode.BadGateway
 	fmt.Println(xerror.IsXCode(err, failed))
