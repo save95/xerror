@@ -44,37 +44,42 @@ func (e *Error) ErrorCode() int {
 }
 
 func (e *Error) ToMessage(config *ecode.Config) string {
-	msg := e.String()
-	if nil == config || nil == config.Repository {
-		return msg
-	}
+	var defaultMsg, clientMsg string
 
 	// 从资源仓库获取所有端口的解析错误码解析规则
-	if es, err := config.Repository.FindByCode(e.code.Code()); nil == err {
-		defaultMsg := msg
-		for _, entity := range es {
-			if entity.GetCode() != e.code.Code() {
-				break
-			}
+	if config != nil && config.Repository != nil {
+		if es, err := config.Repository.FindByCode(e.code.Code()); nil == err {
+			for _, entity := range es {
+				if entity.GetCode() != e.code.Code() {
+					break
+				}
 
-			// 取得默认消息
-			if entity.GetClient() == int(ecode.ClientDefault) {
-				defaultMsg = entity.GetMessage()
-			}
+				// 取得默认消息
+				if entity.GetClient() == int(ecode.ClientDefault) {
+					defaultMsg = entity.GetMessage()
+				}
 
-			if entity.GetClient() == int(config.Client) && len(entity.GetMessage()) > 0 {
-				msg = entity.GetMessage()
-				break
+				if entity.GetClient() == int(config.Client) && len(entity.GetMessage()) > 0 {
+					clientMsg = entity.GetMessage()
+					break
+				}
 			}
-		}
-
-		// 如果没有对应端口消息，但是有默认消息，则使用默认消息
-		if len(msg) == 0 && len(defaultMsg) > 0 {
-			msg = defaultMsg
 		}
 	}
 
-	return msg
+	// 如果找到对应端口消息，则返回端口消息
+	// 否则，查看是否有端口默认消息，如果有，则返回
+	// 否则，查看是否有 XCode 消息，如果有，则返回
+	// 否则，返回错误消息
+	if len(clientMsg) > 0 {
+		return clientMsg
+	} else if len(defaultMsg) > 0 {
+		return defaultMsg
+	} else if len(e.code.String()) > 0 {
+		return e.code.String()
+	} else {
+		return e.Error()
+	}
 }
 
 func (e *Error) WithFields(field ...interface{}) {
