@@ -35,9 +35,12 @@ func ExampleWithCode() {
 func ExampleWithCode_reserveCode() {
 	code := 500
 	err := xerror.WithCode(code, "customize server error message")
+	// 使用系统保留错误码，只替换错误码消息
 	fmt.Println(err)
+	// HTTP 状态码和错误码不会被覆写
 	fmt.Println(err.HttpStatus())
 	fmt.Println(err.ErrorCode())
+	// 错误消息被覆写
 	fmt.Println(err.String() != xcode.InternalServerError.String())
 
 	// Output:
