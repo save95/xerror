@@ -95,11 +95,3 @@ func (e *Error) GetFields() []interface{} {
 	}
 	return e.fields
 }
-
-func (e *Error) LoadCodes(codes ...xcode.XCode) {
-	xcode.Repository().LoadCodes(codes...)
-}
-
-func (e *Error) AppendCodes(codes ...xcode.XCode) {
-	xcode.Repository().AppendCodes(codes...)
-}
