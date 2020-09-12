@@ -36,24 +36,38 @@ func (e ecodeEntity) GetMessage() string {
 type errorCodeRepository struct{}
 
 func (er errorCodeRepository) FindByCode(code int) ([]ecode.Entity, error) {
-	if code != xcode.InternalServerError.Code() {
+	switch code {
+	case xcode.InternalServerError.Code():
+		return []ecode.Entity{
+			ecodeEntity{ID: 1, Code: 500, Client: int(ecode.ClientWeb), Message: "client web message: 500"},
+			ecodeEntity{ID: 2, Code: 500, Client: int(ecode.ClientH5), Message: "client h5 message: 500"},
+			ecodeEntity{ID: 3, Code: 500, Client: int(ecode.ClientApp), Message: "client app message: 500"},
+			ecodeEntity{ID: 4, Code: 500, Client: int(ecode.ClientWechatPublicAccount), Message: "client wechat message: 500"},
+		}, nil
+	case xcode.Forbidden.Code():
+		return []ecode.Entity{
+			ecodeEntity{ID: 5, Code: 403, Client: int(ecode.ClientDefault), Message: "default message: 403"},
+			ecodeEntity{ID: 6, Code: 403, Client: int(ecode.ClientApp), Message: "client app message: 403"},
+		}, nil
+	default:
 		return []ecode.Entity{}, nil
 	}
-
-	return []ecode.Entity{
-		ecodeEntity{ID: 1, Code: code, Client: int(ecode.ClientWeb), Message: "client web message"},
-		ecodeEntity{ID: 2, Code: code, Client: int(ecode.ClientH5), Message: "client h5 message"},
-		ecodeEntity{ID: 3, Code: code, Client: int(ecode.ClientApp), Message: "client app message"},
-		ecodeEntity{ID: 4, Code: code, Client: int(ecode.ClientWechatPublicAccount), Message: "client wechat message"},
-	}, nil
 }
 
 func ExampleError_ToMessage() {
+	repo := &errorCodeRepository{}
+
 	err := xerror.WithXCode(xcode.InternalServerError)
-	fmt.Println(err.ToMessage(&ecode.Config{Client: ecode.ClientWechatPublicAccount, Repository: &errorCodeRepository{}}))
-	fmt.Println(err.ToMessage(&ecode.Config{Client: ecode.ClientWechatMiniProgram, Repository: &errorCodeRepository{}}))
+	fmt.Println(err.ToMessage(&ecode.Config{Client: ecode.ClientWechatPublicAccount, Repository: repo}))
+	fmt.Println(err.ToMessage(&ecode.Config{Client: ecode.ClientWechatMiniProgram, Repository: repo}))
+
+	err2 := xerror.WithXCode(xcode.Forbidden)
+	fmt.Println(err2.ToMessage(&ecode.Config{Client: ecode.ClientApp, Repository: repo}))
+	fmt.Println(err2.ToMessage(&ecode.Config{Client: ecode.ClientH5, Repository: repo}))
 
 	// Output:
-	// client wechat message
+	// client wechat message: 500
 	// 内部服务错误
+	// client app message: 403
+	// default message: 403
 }
