@@ -5,7 +5,7 @@ import (
 	"github.com/save95/xerror/xcode"
 )
 
-func Wrap(err error, message string) XError {
+func Wrap(err error, message string) *xError {
 	// 如果没有错误，直接返回
 	if nil == err {
 		return nil
@@ -20,17 +20,17 @@ func Wrap(err error, message string) XError {
 		code = xcode.NewWithMessage(xe.ErrorCode(), message)
 	}
 
-	return &Error{
+	return &xError{
 		code:  code,
 		error: errors.Wrap(err, message),
 	}
 }
 
-func WrapWithCode(err error, code int) XError {
+func WrapWithCode(err error, code int) *xError {
 	return WrapWithXCode(err, xcode.New(code))
 }
 
-func WrapWithXCode(err error, code xcode.XCode) XError {
+func WrapWithXCode(err error, code xcode.XCode) *xError {
 	if nil == code {
 		code = xcode.InternalServerError
 	}
@@ -46,7 +46,7 @@ func WrapWithXCode(err error, code xcode.XCode) XError {
 		err = errors.Wrap(err, code.String())
 	}
 
-	return &Error{
+	return &xError{
 		code:  code,
 		error: err,
 	}

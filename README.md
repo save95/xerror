@@ -51,7 +51,7 @@ func ExampleWithXCode() {
 
 更多用法请访问 [错误码基本使用场景](examples/base_usage_test.go)
 
-### 进阶用法
+### 其他用法
 
   - [客户端消息](examples/client_message_test.go)
   - [错误断言](examples/compare_test.go)

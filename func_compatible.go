@@ -1,13 +1,14 @@
-// github.com/pkg/errors 包兼容函数
 package xerror
 
 import "fmt"
 
-func Errorf(format string, args ...interface{}) error {
+// github.com/pkg/errors 包兼容函数
+
+func Errorf(format string, args ...interface{}) *xError {
 	return New(fmt.Sprintf(format, args...))
 }
 
-func Wrapf(err error, format string, args ...interface{}) error {
+func Wrapf(err error, format string, args ...interface{}) *xError {
 	if nil == err {
 		return nil
 	}
@@ -15,7 +16,7 @@ func Wrapf(err error, format string, args ...interface{}) error {
 	return Wrap(err, fmt.Sprintf(format, args...))
 }
 
-func WithMessage(err error, message string) error {
+func WithMessage(err error, message string) *xError {
 	if nil == err {
 		return nil
 	}
@@ -23,7 +24,7 @@ func WithMessage(err error, message string) error {
 	return Wrap(err, message)
 }
 
-func WithMessagef(err error, format string, args ...interface{}) error {
+func WithMessagef(err error, format string, args ...interface{}) *xError {
 	if nil == err {
 		return nil
 	}

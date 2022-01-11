@@ -5,13 +5,13 @@ import (
 	"github.com/save95/xerror/xcode"
 )
 
-type Error struct {
+type xError struct {
 	code   xcode.XCode
 	error  error
 	fields []interface{}
 }
 
-func (e *Error) String() string {
+func (e *xError) String() string {
 	if e.code == nil {
 		return "error"
 	}
@@ -19,7 +19,7 @@ func (e *Error) String() string {
 	return e.code.String()
 }
 
-func (e *Error) Error() string {
+func (e *xError) Error() string {
 	if e.error == nil {
 		return "error"
 	}
@@ -27,11 +27,11 @@ func (e *Error) Error() string {
 	return e.error.Error()
 }
 
-func (e *Error) Unwrap() error {
+func (e *xError) Unwrap() error {
 	return e.error
 }
 
-func (e *Error) HttpStatus() int {
+func (e *xError) HttpStatus() int {
 	if e.code == nil {
 		return xcode.InternalServerError.Code()
 	}
@@ -39,11 +39,11 @@ func (e *Error) HttpStatus() int {
 	return e.code.HttpStatus()
 }
 
-func (e *Error) ErrorCode() int {
+func (e *xError) ErrorCode() int {
 	return e.code.Code()
 }
 
-func (e *Error) ToMessage(config *ecode.Config) string {
+func (e *xError) ToMessage(config *ecode.Config) string {
 	var defaultMsg, clientMsg string
 
 	// 从资源仓库获取所有端口的解析错误码解析规则
@@ -82,14 +82,16 @@ func (e *Error) ToMessage(config *ecode.Config) string {
 	}
 }
 
-func (e *Error) WithFields(field ...interface{}) {
+func (e *xError) WithFields(field ...interface{}) *xError {
 	if e.fields == nil {
 		e.fields = make([]interface{}, 0)
 	}
 	e.fields = append(e.fields, field...)
+
+	return e
 }
 
-func (e *Error) GetFields() []interface{} {
+func (e *xError) GetFields() []interface{} {
 	if e.fields == nil {
 		return make([]interface{}, 0)
 	}
