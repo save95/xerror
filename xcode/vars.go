@@ -26,6 +26,7 @@ var (
 	VersionNotSupported = &xCode{httpStatus: http.StatusHTTPVersionNotSupported, code: 505, message: "不支持的版本"}
 
 	// DB 错误，前缀 1
+
 	DBFailed            = &xCode{httpStatus: http.StatusInternalServerError, code: 1001, message: "数据库操作失败"}
 	DBTransactionError  = &xCode{httpStatus: http.StatusInternalServerError, code: 1002, message: "数据库事务错误"}
 	DBRecordNotFound    = &xCode{httpStatus: http.StatusNotFound, code: 1003, message: "无相关记录"}
@@ -33,6 +34,7 @@ var (
 	DBRequestParamError = &xCode{httpStatus: http.StatusBadRequest, code: 1005, message: "数据库操作请求参数错误"}
 
 	// GRPC 错误，前缀 2
+
 	GRPCFailed         = &xCode{httpStatus: http.StatusInternalServerError, code: 2001, message: "GRPC 服务错误"}
 	GRPCMethodNotFound = &xCode{httpStatus: http.StatusInternalServerError, code: 2002, message: "不支持的 GRPC 方法"}
 	GRPCUnauthorized   = &xCode{httpStatus: http.StatusInternalServerError, code: 2003, message: "GRPC 访问未授权"}

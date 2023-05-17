@@ -1,6 +1,6 @@
 package ecode
 
-// 端口
+// Client 应用端口
 type Client uint
 
 const (

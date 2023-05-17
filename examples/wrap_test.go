@@ -45,6 +45,22 @@ func ExampleWrapWithXCode() {
 	// 500
 }
 
+func ExampleWrapWithXCodeStatus() {
+	err := xerror.New("gorm failed")
+	werr := xerror.WrapWithXCodeStatus(err, xcode.RequestParamError)
+
+	fmt.Println(werr)
+	fmt.Println(werr.ErrorCode() != err.ErrorCode())
+	fmt.Println(err.HttpStatus())
+	fmt.Println(werr.HttpStatus())
+
+	// Output:
+	// gorm failed
+	// true
+	// 500
+	// 400
+}
+
 func ExampleWrapWithCode() {
 	code := 3333
 	err := xerror.New("first xerror")
