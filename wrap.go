@@ -12,19 +12,33 @@ func Wrap(err error, message string) *xError {
 		return nil
 	}
 
+	// 如果本身是 XError 则使用其错误码
 	code := xcode.NewMessage(message)
-
-	// 如果本身是 XError 则包装 error
-	// 偷个懒，直接用 pkg/errors 来包装
 	if xe, ok := err.(XError); ok {
-		err = xe.Unwrap()
 		code = xcode.NewWithMessage(xe.ErrorCode(), message)
 	}
 
 	return &xError{
-		code:  code,
-		error: errors.Wrap(err, message),
+		code:   code,
+		error:  errors.Wrap(getOriginError(err), message),
+		fields: getFields(err),
 	}
+}
+
+// 获取原始错误，防止过度包装
+func getOriginError(err error) error {
+	if xe, ok := err.(XError); ok {
+		return xe.Unwrap()
+	}
+	return err
+}
+
+// 获取 xError 的自定义字段，方便追加到包装后的错误中
+func getFields(err error) []interface{} {
+	if xe, ok := err.(XFields); ok {
+		return xe.GetFields()
+	}
+	return nil
 }
 
 // WrapWithCode 使用指定错误码包装错误
@@ -45,13 +59,10 @@ func WrapWithXCode(err error, code xcode.XCode) *xError {
 		code = xcode.InternalServerError
 	}
 
-	if xe, ok := err.(XError); ok {
-		err = xe.Unwrap()
-	}
-
 	return &xError{
-		code:  code,
-		error: errors.Wrap(err, code.String()),
+		code:   code,
+		error:  errors.Wrap(getOriginError(err), code.String()),
+		fields: getFields(err),
 	}
 }
 
@@ -69,12 +80,9 @@ func WrapWithXCodeStatus(err error, code xcode.XCode) *xError {
 
 	code = xcode.WithMessage(code, err.Error())
 
-	if xe, ok := err.(XError); ok {
-		err = xe.Unwrap()
-	}
-
 	return &xError{
-		code:  code,
-		error: err,
+		code:   code,
+		error:  getOriginError(err),
+		fields: getFields(err),
 	}
 }

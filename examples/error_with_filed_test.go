@@ -18,6 +18,15 @@ func ExampleError_WithFields() {
 	// is not impl xerror.XFields
 }
 
+func ExampleError_WithFields_Wrap() {
+	showFields(xerror.Wrap(fieldError(), "wrap field error"))
+
+	//Output:
+	//field: {Key1:value1 Key2:-1 Key3:[0 1 2]}
+	//field: append
+	//field: {Key1:value2 Key2:1 Key3:[2 1 2]}
+}
+
 type field struct {
 	Key1 string
 	Key2 int
