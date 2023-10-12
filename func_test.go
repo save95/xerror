@@ -33,3 +33,29 @@ func TestWithXCodeMessage(t *testing.T) {
 	t.Log(err)
 	t.Log(err.ToMessage(nil))
 }
+
+func TestParsePayload(t *testing.T) {
+	err := xerror.WithXCodeMessage(xcode.InternalServerError, "变更消息")
+	t.Log(xerror.ParsePayload(err))
+
+	err2 := xerror.Wrap(err, "错误2").
+		WithFields("abc").
+		WithFields(map[string]interface{}{
+			"k": "v",
+			"a": 1,
+		})
+	t.Log(xerror.ParsePayload(err2))
+}
+
+func TestStackTraceString(t *testing.T) {
+	err := xerror.WithXCodeMessage(xcode.InternalServerError, "变更消息")
+	t.Log(xerror.FormatStackTrace(err))
+
+	err2 := xerror.Wrap(err, "错误2").
+		WithFields("abc").
+		WithFields(map[string]interface{}{
+			"k": "v",
+			"a": 1,
+		})
+	t.Log(xerror.FormatStackTrace(err2))
+}

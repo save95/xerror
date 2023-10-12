@@ -1,6 +1,7 @@
 package xerror_test
 
 import (
+	"errors"
 	"testing"
 
 	"github.com/save95/xerror"
@@ -14,6 +15,7 @@ func TestError_Unwrap(t *testing.T) {
 
 	werr := xerror.Wrap(err, "wrap xerror")
 	t.Logf("%+v\n", werr.Unwrap())
+	t.Log(errors.As(werr, new(xerror.XError)))
 }
 
 type ecodeEntity struct {
