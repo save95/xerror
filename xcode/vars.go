@@ -32,6 +32,7 @@ var (
 	DBRecordNotFound    = &xCode{httpStatus: http.StatusNotFound, code: 1003, message: "无相关记录"}
 	DBRecordExist       = &xCode{httpStatus: http.StatusInternalServerError, code: 1004, message: "数据已存在"}
 	DBRequestParamError = &xCode{httpStatus: http.StatusBadRequest, code: 1005, message: "数据库操作请求参数错误"}
+	DBDuplicateEntry    = &xCode{httpStatus: http.StatusBadRequest, code: 1006, message: "数据库存在重复数据"}
 
 	// GRPC 错误，前缀 2
 
@@ -64,6 +65,7 @@ var allCode = []XCode{
 	DBRecordNotFound,
 	DBRecordExist,
 	DBRequestParamError,
+	DBDuplicateEntry,
 
 	GRPCFailed,
 	GRPCMethodNotFound,

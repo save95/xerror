@@ -1,6 +1,10 @@
 package xerror
 
 import (
+	"encoding/json"
+	"fmt"
+	"io"
+
 	"github.com/save95/xerror/ecode"
 	"github.com/save95/xerror/xcode"
 )
@@ -13,7 +17,7 @@ type xError struct {
 
 func (e *xError) String() string {
 	if e.code == nil {
-		return "error"
+		return xcode.InternalServerError.String()
 	}
 
 	return e.code.String()
@@ -21,7 +25,7 @@ func (e *xError) String() string {
 
 func (e *xError) Error() string {
 	if e.error == nil {
-		return "error"
+		return xcode.InternalServerError.String()
 	}
 
 	return e.error.Error()
@@ -33,13 +37,17 @@ func (e *xError) Unwrap() error {
 
 func (e *xError) HttpStatus() int {
 	if e.code == nil {
-		return xcode.InternalServerError.Code()
+		return xcode.InternalServerError.HttpStatus()
 	}
 
 	return e.code.HttpStatus()
 }
 
 func (e *xError) ErrorCode() int {
+	if e.code == nil {
+		return xcode.InternalServerError.Code()
+	}
+
 	return e.code.Code()
 }
 
@@ -79,6 +87,29 @@ func (e *xError) ToMessage(config *ecode.Config) string {
 		return e.code.String()
 	} else {
 		return e.Error()
+	}
+}
+
+func (e *xError) Format(s fmt.State, verb rune) {
+	switch verb {
+	case 'v':
+		if s.Flag('+') {
+			// 展示 xField 内容
+			if e.fields != nil && len(e.fields) > 0 {
+				if bs, err := json.Marshal(e.fields); nil == err {
+					_, _ = fmt.Fprintf(s, "\nfields: %s\n", string(bs))
+				}
+			}
+			_, _ = fmt.Fprintf(s, "%+v", e.error)
+			return
+		}
+		fallthrough
+	case 's':
+		if s.Flag('-') {
+			_, _ = io.WriteString(s, e.String())
+			return
+		}
+		_, _ = fmt.Fprintf(s, "[%d] %s", e.ErrorCode(), e.error)
 	}
 }
 
