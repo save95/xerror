@@ -64,3 +64,15 @@ func ParsePayload(err error) string {
 func FormatStackTrace(err error) string {
 	return fmt.Sprintf("%+v", err)
 }
+
+// FormatMsg 格式化错误消息内容
+func FormatMsg(err error) string {
+	if e, ok := err.(XError); ok {
+		msg := fmt.Sprintf("[%d] %s", e.ErrorCode(), e.String())
+		if xf, ok := err.(XFields); ok {
+			return fmt.Sprintf("[%d] %s (%+v)", e.ErrorCode(), e.String(), xf.GetFields())
+		}
+		return msg
+	}
+	return err.Error()
+}

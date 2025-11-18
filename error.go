@@ -3,7 +3,6 @@ package xerror
 import (
 	"encoding/json"
 	"fmt"
-	"io"
 
 	"github.com/save95/xerror/ecode"
 	"github.com/save95/xerror/xcode"
@@ -103,13 +102,13 @@ func (e *xError) Format(s fmt.State, verb rune) {
 			_, _ = fmt.Fprintf(s, "%+v", e.error)
 			return
 		}
-		fallthrough
-	case 's':
-		if s.Flag('-') {
-			_, _ = io.WriteString(s, e.String())
-			return
-		}
-		_, _ = fmt.Fprintf(s, "[%d] %s", e.ErrorCode(), e.error)
+		//fallthrough
+		//case 's':
+		//	if s.Flag('-') {
+		//		_, _ = io.WriteString(s, e.String())
+		//		return
+		//	}
+		//	_, _ = fmt.Fprintf(s, "[%d] %s", e.ErrorCode(), e.error)
 	}
 }
 
